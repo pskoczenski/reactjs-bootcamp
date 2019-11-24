@@ -13,33 +13,79 @@
 
         <script type='text/babel'>
 
-            const name = 'Pika'
-            const handle = '@pika_of_the_north'
-            const email = 'pskoczenski@gmail.com'
-
-            function NameComponent (props) {
-                return  <h1>{props.name}</h1>
-            }
-
-            function HandleComponent (props) {
-                return <h2>{props.handle}</h2>
-            }
-
-            function EmailComponent (props) {
-                return <h3>{props.email}</h3>
-            }
-
-            function App () {
+            function FriendsList (props) {
                 return (
                     <div>
-                        <NameComponent name={name}/>
-                        <HandleComponent handle={handle}/>
-                        <EmailComponent email={email}/>
+                        <ul>
+                            {props.list.map((name) => (
+                                <li key={name} >
+                                    <span>{name}</span>
+                                    <button onClick={() => props.onRemoveFriend(name)}>Remove</button>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
                 )
-                
             }
 
+            class App extends React.Component {
+                constructor(props) {
+                    super(props)
+
+                    this.state = {
+                        friends: [ 'Owen', 'Chris', 'Jeff', 'Remo'],
+                        input: ''
+                    }
+
+                    this.handleRemoveFriend = this.handleRemoveFriend.bind(this)
+                    this.handlerAddFriend = this.handlerAddFriend.bind(this)
+                    this.updateInput = this.updateInput.bind(this)
+                }
+                handlerAddFriend(name) {
+                    this.setState((currentState) => {
+                        return {
+                            friends: currentState.friends.concat([this.state.input]),
+                            input: ''
+                        }
+                    })
+
+                }
+                handleRemoveFriend(name) {
+                    this.setState((currentState) => {
+                        return {
+                            friends: currentState.friends.filter((friend) => friend !== name)
+                        }
+                    })
+                }
+
+                updateInput(e) {
+                    const value = e.target.value
+
+                    this.setState({
+                        input: value
+                    })
+                }
+
+                render() {
+                    return (
+                        <div>
+                            <input 
+                                type="text"
+                                placeholder='New Friend'
+                                value={this.state.input}
+                                onChange={this.updateInput}
+                            />
+                            <button onClick={this.handlerAddFriend}>
+                                Add Friend
+                            </button>
+                            <FriendsList
+                                list={this.state.friends}
+                                onRemoveFriend={this.handleRemoveFriend}
+                            />
+                        </div>
+                    )
+                }
+            }
            
             ReactDOM.render(
                 <App />,
@@ -51,3 +97,34 @@
 
 
 </html>
+
+
+
+
+<!-- // ************ Day 1 Code
+            // const name = 'peter'
+            // const handle = '@pika_of_the_north'
+            // const email = 'pskoczenski@gmail.com'
+
+            // function NameComponent (props) {
+            //     return  <h1>{props.name}</h1>
+            // }
+
+            // function HandleComponent (props) {
+            //     return <h2>{props.handle}</h2>
+            // }
+
+            // function EmailComponent (props) {
+            //     return <h3>{props.email}</h3>
+            // }
+
+            // function App () {
+            //     return (
+            //         <div>
+            //             <NameComponent name={name}/>
+            //             <HandleComponent handle={handle}/>
+            //             <EmailComponent email={email}/>
+            //         </div>
+            //     )
+                
+            // } -->
